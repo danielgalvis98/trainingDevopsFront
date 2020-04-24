@@ -78,3 +78,4 @@ app.get('/pending', function(req, res){
 })
 
 app.listen(process.env.PORT_FRONT);
+module.exports = app;
