@@ -34,6 +34,22 @@ node {
     }
   }
 
+  stage('Build and Publish') {
+      timeout(10) {
+        echo 'Building docker image...'
+        def registry = 'registry:5000'
+        def serviceName = 'review-ui'
+        def branchName = env.CHANGE_BRANCH ?: env.BRANCH_NAME
+
+        def pushImage = docker.build("${registry}/${serviceName}:${branchName}-${BUILD_ID}")
+        pushImage.push()
+
+        if (branchName == 'master') {
+          pushImage.push('latest')
+        }
+      }
+    }
+
   stage('Clean Workspace') {
     timeout(3) {
       echo 'Cleaning workspace...'
