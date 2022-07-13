@@ -1,0 +1,16 @@
+name: 'review-app'
+
+services:
+  review-ui:
+    image: registry:5000/review-ui
+    container_name: review-ui
+    restart: always
+    env_file: ui.env
+    ports:
+      - "8080:8080"
+    networks:
+      - review-app-network
+
+networks:
+  review-app-network:
+    external: true
