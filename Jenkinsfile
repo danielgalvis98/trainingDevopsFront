@@ -50,6 +50,12 @@ node {
       }
     }
 
+    stage('Deploy compose to dind') {
+      timeout(10){
+        sh 'docker compose up -d'
+      }
+    }
+
   stage('Clean Workspace') {
     timeout(3) {
       echo 'Cleaning workspace...'
