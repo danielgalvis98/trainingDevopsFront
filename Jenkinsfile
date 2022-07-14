@@ -1,4 +1,5 @@
 node {
+  def branchName = env.CHANGE_BRANCH ?: env.BRANCH_NAME
   string nodeBaseImage = 'node:16.15.0'
 
   properties([
@@ -39,7 +40,6 @@ node {
         echo 'Building docker image...'
         def registry = 'registry:5000'
         def serviceName = 'review-ui'
-        def branchName = env.CHANGE_BRANCH ?: env.BRANCH_NAME
 
         def pushImage = docker.build("${registry}/${serviceName}:${branchName}-${BUILD_ID}")
         pushImage.push()
@@ -52,7 +52,9 @@ node {
 
     stage('Deploy compose to dind') {
       timeout(10){
-        sh 'docker compose up -d'
+        if(branchName == 'master'){
+          sh 'docker compose up -d'
+        }
       }
     }
 
